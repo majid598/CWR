@@ -132,4 +132,43 @@ const newSubscribe = async (req, res, next) => {
   });
 };
 
-export { newSubscribe };
+const postNews = async (req, res, next) => {
+  const { subject, text, html } = req.body;
+  if (!subject || !text || !html)
+    return next(new ErrorHandler("All Fields Are Required", 404));
+
+  const subscribers = await Subscriber.find({});
+  const emails = subscribers.map((sub) => sub.email);
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.MAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.MAIL,
+    to: emails,
+    subject,
+    text,
+    html: `${html}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res
+        .status(500)
+        .send("Error sending newsletter. Please try again.");
+    }
+    res.status(200).send("Newsletter sent successfully!");
+  });
+
+  res.status(200).json({
+    success: true,
+    message: `News Posted`,
+  });
+};
+
+export { newSubscribe, postNews };
