@@ -4,7 +4,8 @@ import ErrorHandler from "../utils/utility.js";
 
 const newSubscribe = async (req, res, next) => {
   const { email } = req.body;
-  if (!email) return next(new ErrorHandler("Chootiya", 401));
+  if (!email)
+    return next(new ErrorHandler("Please Enter Your Email Address", 404));
   const emailExist = await Subscriber.findOne({ email });
   if (emailExist)
     return next(new ErrorHandler("You Are Already Subscribed!", 400));
