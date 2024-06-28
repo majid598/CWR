@@ -15,6 +15,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:4173",
       "https://cwr-components.vercel.app",
+      "https://apload-news.vercel.app",
       process.env.CLIENT_URL,
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
